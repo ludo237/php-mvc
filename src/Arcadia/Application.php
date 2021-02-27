@@ -2,8 +2,6 @@
 
 namespace Arcadia;
 
-use JetBrains\PhpStorm\Pure;
-
 /**
  * Class Application
  * @package Arcadia
@@ -16,7 +14,7 @@ class Application
     /**
      * Application constructor.
      */
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->request = new Request();
         $this->router = new Router($this->request);
