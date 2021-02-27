@@ -1,0 +1,22 @@
+{
+  "name": "ludo237/php-mvc",
+  "description": "A framework just for fun",
+  "license": "unlicensed",
+  "authors": [
+    {
+      "name": "Claudio Ludovico Panetta",
+      "email": "ludo@panetta.it"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Arcadia\\": "src/Arcadia"
+    }
+  },
+  "require": {},
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
