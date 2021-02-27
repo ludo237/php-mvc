@@ -13,7 +13,9 @@
       "Arcadia\\": "src/Arcadia"
     }
   },
-  "require": {},
+  "require": {
+    "php": "^8.0"
+  },
   "config": {
     "sort-packages": true
   },
