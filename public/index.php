@@ -9,10 +9,12 @@ require_once __DIR__ . "/../vendor/autoload.php";
 use Arcadia\Application;
 
 // Start the Application itself
-$app = new Application();
+$app = new Application(dirname(__DIR__));
 
-$app->router->get("/", function () {
-    return "Hello World";
+$app->router->view("home", "/");
+$app->router->post("/", function () {
+    return "Submitted";
 });
+$app->router->view("about");
 
 $app->run();
