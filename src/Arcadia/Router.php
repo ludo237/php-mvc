@@ -32,18 +32,18 @@ class Router
      * @param string $path
      * @param string|callable $value
      */
-    private function addRouteToList(string $method, string $path, callable|string $value) : void
+    private function addRouteToList(string $method, string $path, callable|string|array $value) : void
     {
         $this->routes[$method][$path] = $value;
     }
     
     /**
      * @param string $path
-     * @param \Closure $callback
+     * @param \Closure|array|string $callback
      *
      * @return $this
      */
-    public function get(string $path, Closure $callback) : self
+    public function get(string $path, Closure|array|string $callback) : self
     {
         $this->addRouteToList("get", $path, $callback);
         
@@ -52,11 +52,11 @@ class Router
     
     /**
      * @param string $path
-     * @param \Closure $callback
+     * @param \Closure|array|string $callback
      *
      * @return $this
      */
-    public function post(string $path, Closure $callback) : self
+    public function post(string $path, Closure|array|string $callback) : self
     {
         $this->addRouteToList("post", $path, $callback);
         
@@ -95,17 +95,21 @@ class Router
             return $this->renderError(404);
         }
         
-        if (is_string($callback)) {
+        // Direct view render
+        if (is_string($callback) && !class_exists($callback)) {
             return $this->renderView($callback);
         }
         
-        return call_user_func($callback);
+        // If it's not a view we assume that it's an invokable controller
+        // Invokable controllers are the only way I want to support controllers because it
+        // forces the developer to DRY controllers as much as possibile
+        return call_user_func(new $callback, $this->request);
     }
     
-    public function renderView(string $view) : array|bool|string
+    public function renderView(string $view, array $parameters = []) : array|bool|string
     {
         $layout = $this->resolveLayout();
-        $view = $this->resolveView($view);
+        $view = $this->resolveView($view, $parameters);
         
         return str_replace("{{content}}", $view, $layout);
     }
@@ -126,8 +130,13 @@ class Router
         return ob_get_clean();
     }
     
-    protected function resolveView(string $view) : bool|string
+    protected function resolveView(string $view, array $parameters = []) : bool|string
     {
+        // This sucks but it works now I need to study more about the rendering engine
+        foreach ($parameters as $key => $value) {
+            $$key = $value;
+        }
+        
         ob_start();
         include_once Application::$ROOT_DIRECTORY . "/views/{$view}.php";
         
