@@ -13,7 +13,7 @@ class Router
     protected array $routes = [];
     protected Request $request;
     protected Response $response;
-    
+    protected string $layout;
     
     /**
      * Router constructor.
@@ -103,7 +103,10 @@ class Router
         // If it's not a view we assume that it's an invokable controller
         // Invokable controllers are the only way I want to support controllers because it
         // forces the developer to DRY controllers as much as possibile
-        return call_user_func(new $callback, $this->request);
+        $controller = new $callback();
+        $this->layout = $controller->getLayout();
+        
+        return call_user_func($controller, $this->request);
     }
     
     public function renderView(string $view, array $parameters = []) : array|bool|string
@@ -124,8 +127,10 @@ class Router
     
     protected function resolveLayout() : bool|string
     {
+        $layout = $this->layout ?? "default";
+        
         ob_start();
-        include_once Application::$ROOT_DIRECTORY . "/views/layouts/default.layout.php";
+        include_once Application::$ROOT_DIRECTORY . "/views/layouts/{$layout}.layout.php";
         
         return ob_get_clean();
     }
