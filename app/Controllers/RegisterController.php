@@ -4,7 +4,9 @@
 namespace App\Controllers;
 
 
+use App\Models\User;
 use Arcadia\Controller;
+use Arcadia\Exceptions\ValidationException;
 use Arcadia\Request;
 
 /**
@@ -19,6 +21,19 @@ class RegisterController extends Controller
             return $this->show("register");
         }
         
-        return "Register data";
+        try {
+            $user = new User();
+            $user->validate($request);
+            $user->create();
+            
+            $this->show("register", [
+                "user" => $user->toArray(),
+            ]);
+            
+        } catch (ValidationException $exception) {
+            return $this->show("register", [
+                "errors" => $exception->getErrors(),
+            ]);
+        }
     }
 }

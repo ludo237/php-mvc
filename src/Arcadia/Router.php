@@ -138,9 +138,16 @@ class Router
     protected function resolveView(string $view, array $parameters = []) : bool|string
     {
         // This sucks but it works now I need to study more about the rendering engine
+        
+        // Auto inject errors on every views
+        if (!isset($parameters["errors"])) {
+            $errors = [];
+        }
+        
         foreach ($parameters as $key => $value) {
             $$key = $value;
         }
+        
         
         ob_start();
         include_once Application::$ROOT_DIRECTORY . "/views/{$view}.php";
