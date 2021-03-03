@@ -20,13 +20,13 @@
       <div class="col">
         <div class="mb-3">
           <label for="inputName" class="form-label">Your name</label>
-          <input type="text" name="name" class="form-control" id="inputName">
+          <input type="text" name="name" class="form-control" id="inputName" value="<?php echo $old["name"] ?? "" ?>">
         </div>
       </div>
       <div class="col">
         <div class="mb-3">
           <label for="inputEmail" class="form-label">Email address</label>
-          <input type="email" name="email" class="form-control" id="inputEmail">
+          <input type="email" name="email" class="form-control" id="inputEmail" value="<?php echo $old["email"] ?? "" ?>">
         </div>
       </div>
     </div>

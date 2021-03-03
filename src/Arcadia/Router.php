@@ -140,9 +140,8 @@ class Router
         // This sucks but it works now I need to study more about the rendering engine
         
         // Auto inject errors on every views
-        if (!isset($parameters["errors"])) {
-            $errors = [];
-        }
+        $errors = $parameters["errors"] ?? [];
+        $old = $parameters["old"] ?? [];
         
         foreach ($parameters as $key => $value) {
             $$key = $value;

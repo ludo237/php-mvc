@@ -33,6 +33,7 @@ class RegisterController extends Controller
         } catch (ValidationException $exception) {
             return $this->show("register", [
                 "errors" => $exception->getErrors(),
+                "old" => $request->body(),
             ]);
         }
     }

@@ -40,7 +40,7 @@ abstract class Model
                     $errors[$attribute][] = "The field {$attribute} is required";
                 }
                 
-                if ($name === "email" && filter_var($attributeValue, FILTER_VALIDATE_EMAIL)) {
+                if ($name === "email" && !filter_var($attributeValue, FILTER_VALIDATE_EMAIL)) {
                     $errors[$attribute][] = "The field {$attribute} is not a valid Email address";
                 }
                 
