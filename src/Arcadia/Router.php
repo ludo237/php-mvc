@@ -15,34 +15,17 @@ class Router
     protected Response $response;
     protected string $layout;
     
-    /**
-     * Router constructor.
-     *
-     * @param \Arcadia\Request $request
-     * @param \Arcadia\Response $response
-     */
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
     }
     
-    /**
-     * @param string $method
-     * @param string $path
-     * @param callable|string|array $value
-     */
     private function addRouteToList(string $method, string $path, callable|string|array $value) : void
     {
         $this->routes[$method][$path] = $value;
     }
     
-    /**
-     * @param string $path
-     * @param \Closure|array|string $callback
-     *
-     * @return $this
-     */
     public function get(string $path, Closure|array|string $callback) : self
     {
         $this->addRouteToList("get", $path, $callback);
@@ -50,12 +33,6 @@ class Router
         return $this;
     }
     
-    /**
-     * @param string $path
-     * @param \Closure|array|string $callback
-     *
-     * @return $this
-     */
     public function post(string $path, Closure|array|string $callback) : self
     {
         $this->addRouteToList("post", $path, $callback);
@@ -63,12 +40,6 @@ class Router
         return $this;
     }
     
-    /**
-     * @param string $viewName
-     * @param string|null $path
-     *
-     * @return $this
-     */
     public function view(string $viewName, ?string $path = null) : self
     {
         if (is_null($path)) {
@@ -138,7 +109,6 @@ class Router
     protected function resolveView(string $view, array $parameters = []) : bool|string
     {
         // This sucks but it works now I need to study more about the rendering engine
-        
         // Auto inject errors on every views
         $errors ??= [];
         $old ??= [];

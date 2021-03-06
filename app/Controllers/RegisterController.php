@@ -26,7 +26,7 @@ class RegisterController extends Controller
             $user->validate($request);
             $user->create();
             
-            $this->show("register", [
+            return $this->show("register", [
                 "user" => $user->toArray(),
             ]);
             

@@ -2,6 +2,7 @@
 
 namespace Arcadia\Exceptions;
 
+use Arcadia\Response;
 use Exception;
 
 /**
@@ -14,7 +15,7 @@ class ValidationException extends Exception
     
     public function __construct(string $message, array $errors)
     {
-        parent::__construct($message, 422, null);
+        parent::__construct($message, Response::HTTP_UNPROCESSABLE_ENTITY);
         
         $this->errors = $errors;
     }

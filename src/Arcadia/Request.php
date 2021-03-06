@@ -15,23 +15,26 @@ class Request
     
     public function __construct()
     {
-        $sanitizedBody = [];
+        $this->inputs = $this->sanitize();
+    }
+    
+    private function sanitize() : array
+    {
+        $body = [];
         
-        // TODO Improve this shit fest
         if ($this->method() === "get") {
             foreach ($_GET as $key => $value) {
-                $sanitizedBody[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-                
+                $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }
         
         if ($this->method() === "post") {
             foreach ($_POST as $key => $value) {
-                $sanitizedBody[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+                $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }
         
-        $this->inputs = $sanitizedBody;
+        return $body;
     }
     
     public function serverPath() : string
