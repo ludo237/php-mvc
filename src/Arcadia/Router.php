@@ -30,7 +30,7 @@ class Router
     /**
      * @param string $method
      * @param string $path
-     * @param string|callable $value
+     * @param callable|string|array $value
      */
     private function addRouteToList(string $method, string $path, callable|string|array $value) : void
     {
@@ -127,7 +127,7 @@ class Router
     
     protected function resolveLayout() : bool|string
     {
-        $layout = $this->layout ?? "default";
+        $layout ??= "default";
         
         ob_start();
         include_once Application::$ROOT_DIRECTORY . "/views/layouts/{$layout}.layout.php";
@@ -140,8 +140,8 @@ class Router
         // This sucks but it works now I need to study more about the rendering engine
         
         // Auto inject errors on every views
-        $errors = $parameters["errors"] ?? [];
-        $old = $parameters["old"] ?? [];
+        $errors ??= [];
+        $old ??= [];
         
         foreach ($parameters as $key => $value) {
             $$key = $value;

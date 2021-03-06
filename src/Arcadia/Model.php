@@ -25,7 +25,7 @@ abstract class Model
      */
     public function validate(Request $request) : void
     {
-        $this->hydrate($request->body());
+        $this->hydrate($request->inputs());
         
         $errors = [];
         foreach ($this->rules() as $attribute => $rules) {

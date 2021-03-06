@@ -11,6 +11,29 @@ class Request
     public const GET = "get";
     public const POST = "post";
     
+    private array $inputs = [];
+    
+    public function __construct()
+    {
+        $sanitizedBody = [];
+        
+        // TODO Improve this shit fest
+        if ($this->method() === "get") {
+            foreach ($_GET as $key => $value) {
+                $sanitizedBody[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+                
+            }
+        }
+        
+        if ($this->method() === "post") {
+            foreach ($_POST as $key => $value) {
+                $sanitizedBody[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
+            }
+        }
+        
+        $this->inputs = $sanitizedBody;
+    }
+    
     public function serverPath() : string
     {
         $path = $_SERVER["REQUEST_URI"] ?? "/";
@@ -39,24 +62,27 @@ class Request
         return $this->method() === self::POST;
     }
     
-    public function body()
+    public function body() : array
     {
-        $sanitizedBody = [];
-        
-        // TODO Improve this shit fest
-        if ($this->method() === "get") {
-            foreach ($_GET as $key => $value) {
-                $sanitizedBody[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-                
-            }
+        return $this->inputs;
+    }
+    
+    public function has(string $key) : bool
+    {
+        return isset($this->inputs[$key]);
+    }
+    
+    public function inputs() : array
+    {
+        return $this->inputs;
+    }
+    
+    public function input(string $key, mixed $value = null) : mixed
+    {
+        if ($this->has($key)) {
+            return $this->inputs[$key];
         }
         
-        if ($this->method() === "post") {
-            foreach ($_POST as $key => $value) {
-                $sanitizedBody[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
-            }
-        }
-        
-        return $sanitizedBody;
+        return $value;
     }
 }
