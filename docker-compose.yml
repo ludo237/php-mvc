@@ -6,6 +6,8 @@ services:
     container_name: database
     restart: always
     environment:
+      POSTGRES_DB: default
+      POSTGRES_USER: default
       POSTGRES_PASSWORD: supersecret
     ports:
       - "5432:5432"
