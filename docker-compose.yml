@@ -1,13 +1,23 @@
-version: "3.9"  # optional since v1.27.0
+version: "3.9"
+
 services:
+  database:
+    image: postgres:13-alpine
+    container_name: database
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: supersecret
+    ports:
+      - "5432:5432"
+
   php:
     build:
       context: .docker
       dockerfile: Dockerfile
-    container_name: cli
+    container_name: php
     tty: true
     stdin_open: true
     ports:
-    - "8080:8080"
+      - "8080:8080"
     volumes:
       - .:/usr/src
