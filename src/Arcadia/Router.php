@@ -77,7 +77,7 @@ class Router
         $controller = new $callback();
         $this->layout = $controller->getLayout();
         
-        return call_user_func($controller, $this->request);
+        return call_user_func($controller, $this->request, $this->response);
     }
     
     public function renderView(string $view, array $parameters = []) : array|bool|string

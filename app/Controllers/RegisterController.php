@@ -23,7 +23,7 @@ class RegisterController extends Controller
         
         try {
             $user = new User();
-            $user->validate($request);
+            $user->validate($request, User::registerRules());
             $user->create();
             
             return $this->show("register", [

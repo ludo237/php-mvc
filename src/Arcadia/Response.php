@@ -14,4 +14,9 @@ class Response
         
         return $this;
     }
+    
+    public function redirect(string $path) : void
+    {
+        header("Location: $path");
+    }
 }

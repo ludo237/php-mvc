@@ -16,6 +16,7 @@ class Application
     public Response $response;
     public Router $router;
     public Session $session;
+    public ?Model $auth = null;
     
     public function __construct(string $rootPath, array $config)
     {
@@ -31,6 +32,10 @@ class Application
         $this->request = new Request();
         $this->router = new Router($this->request, $this->response);
         $this->session = new Session();
+        
+        if($this->auth) {
+            (new Auth)->loginFromSession();
+        }
     }
     
     private function initDatabase(array $config) : void
@@ -38,6 +43,11 @@ class Application
         [$driver, $host, $port, $database, $user, $password, $options] = array_values($config);
         
         $this->database = new Database($driver, $host, $port, $database, $user, $password, $options);
+    }
+    
+    public function setAuthModel(string $modelClass) : void
+    {
+        $this->auth = new $modelClass;
     }
     
     /**

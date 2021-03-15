@@ -14,7 +14,7 @@ class User extends Model
     public string $password;
     public string $password_confirm;
     
-    public function rules() : array
+    public static function registerRules() : array
     {
         return [
             "name" => [
@@ -35,6 +35,41 @@ class User extends Model
                 "match:password",
             ],
         ];
+    }
+    
+    public static function loginRules() : array
+    {
+        return [
+            "email" => [
+                "required",
+                "email",
+                // TODO add exists rule
+            ],
+            
+            "password" => [
+                "required",
+                "min:8",
+            ],
+        ];
+    }
+    
+    public function first(array $parameters = ["*"]) : Model
+    {
+        $tableName = self::$table;
+        $columns = array_keys($parameters);
+        $statement = implode("AND", array_map(fn($attribute) => "$attribute = :$attribute", $columns));
+        
+        $sql = Application::$instance->database->connection->prepare("
+            SELECT * FROM {$tableName} WHERE {$statement}
+        ");
+        
+        foreach ($parameters as $key => $value) {
+            $sql->bindValue(":{$key}", $value);
+        }
+        
+        $sql->execute();
+        
+        return $sql->fetchObject(self::class);
     }
     
     public function create() : Model

@@ -28,8 +28,7 @@ abstract class Controller
         return $this;
     }
     
-    public
-    function getLayout() : string
+    public function getLayout() : string
     {
         return $this->layout;
     }

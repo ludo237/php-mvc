@@ -6,11 +6,13 @@ use Arcadia\Exceptions\ValidationException;
 
 abstract class Model
 {
-    public static string $table;
+    protected static string $table;
     
-    abstract public function rules() : array;
+    protected string|int $id;
     
     abstract public function create() : Model;
+    
+    abstract public function first(array $parameters = ["*"]) : Model;
     
     protected function hydrate(array $data)
     {
@@ -22,12 +24,23 @@ abstract class Model
         }
     }
     
-    public function validate(Request $request) : void
+    public function getKeyName() : string
+    {
+        return "id";
+    }
+    
+    public function getKey() : string|int
+    {
+        return $this->{$this->getKeyName()};
+    }
+    
+    // TODO Move this away
+    public function validate(Request $request, array $rulesSet) : void
     {
         $this->hydrate($request->inputs());
         
         $errors = [];
-        foreach ($this->rules() as $attribute => $rules) {
+        foreach ($rulesSet as $attribute => $rules) {
             // Get the attribute value using PHP magic
             $attributeValue = $this->{$attribute};
             
