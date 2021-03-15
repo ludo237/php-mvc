@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Arcadia\Controller;
+use Arcadia\Request;
 
 /**
  * Class HomeController
@@ -10,12 +11,12 @@ use Arcadia\Controller;
  */
 class HomeController extends Controller
 {
-    public function __invoke() : bool|array|string
+    public function __invoke(Request $request) : bool|array|string
     {
         $viewParameter = [
-            "name" => "Foo Bar",
+            "name" => $request->input("name"),
         ];
-    
+        
         return $this->show("home", $viewParameter);
     }
 }

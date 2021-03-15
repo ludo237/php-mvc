@@ -12,9 +12,10 @@ class Application
     public static string $ROOT_DIRECTORY;
     
     public Database $database;
-    public Router $router;
     public Request $request;
     public Response $response;
+    public Router $router;
+    public Session $session;
     
     public function __construct(string $rootPath, array $config)
     {
@@ -29,6 +30,7 @@ class Application
         $this->response = new Response();
         $this->request = new Request();
         $this->router = new Router($this->request, $this->response);
+        $this->session = new Session();
     }
     
     private function initDatabase(array $config) : void

@@ -1,6 +1,15 @@
 <div class="w-50 mx-auto flex justify-content-center">
   <h1>Home Page</h1>
 
+  <div>
+      <?php
+
+      use Arcadia\Application;
+
+      echo Application::$instance->session->flash("test")
+      ?>
+  </div>
+
   <form enctype="application/x-www-form-urlencoded" action="/" method="post" role="form">
     <p>Change the displayed name to test POST data</p>
     <div class="mb-3">
