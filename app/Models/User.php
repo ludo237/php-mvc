@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Arcadia\Application;
 use Arcadia\Model;
 
 class User extends Model
 {
+    public static string $table = "users";
+    
     public string $name;
     public string $email;
     public string $password;
@@ -20,6 +23,7 @@ class User extends Model
             "email" => [
                 "required",
                 "email",
+                "unique:users.email",
             ],
             "password" => [
                 "required",
@@ -33,8 +37,21 @@ class User extends Model
         ];
     }
     
-    public function create()
+    public function create() : Model
     {
-        // TODO alpha 3
+        $tableName = self::$table;
+        
+        $sql = Application::$instance->database->connection->prepare("
+            INSERT INTO $tableName (name, email, password)
+            VALUES (:name, :email, :password)
+        ");
+        
+        $sql->bindValue(":name", $this->name);
+        $sql->bindValue(":email", $this->email);
+        $sql->bindValue(":password", password_hash($this->password, PASSWORD_ARGON2I));
+        
+        $sql->execute();
+        
+        return $this;
     }
 }

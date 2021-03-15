@@ -6,7 +6,11 @@ use Arcadia\Exceptions\ValidationException;
 
 abstract class Model
 {
+    public static string $table;
+    
     abstract public function rules() : array;
+    
+    abstract public function create() : Model;
     
     protected function hydrate(array $data)
     {
@@ -18,11 +22,6 @@ abstract class Model
         }
     }
     
-    /**
-     * @param \Arcadia\Request $request
-     *
-     * @throws \Arcadia\Exceptions\ValidationException
-     */
     public function validate(Request $request) : void
     {
         $this->hydrate($request->inputs());
@@ -54,6 +53,21 @@ abstract class Model
                 
                 if ($name === "match" && $this->{$value} !== $attributeValue) {
                     $errors[$attribute][] = "The field {$attribute} does not match the field {$value}";
+                }
+                
+                if ($name === "unique") {
+                    [$table, $column] = explode(".", $value);
+                    
+                    $sql = Application::$instance->database->connection->prepare("
+                        SELECT {$column} FROM {$table} WHERE {$column} = :column LIMIT 1
+                    ");
+                    
+                    $sql->bindValue(":column", $attributeValue);
+                    $sql->execute();
+                    
+                    if ($sql->fetchObject()) {
+                        $errors[$attribute][] = "The field {$attribute} has a value that already exists";
+                    }
                 }
             }
         }
